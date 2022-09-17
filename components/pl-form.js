@@ -150,11 +150,11 @@ export class PlForm extends PlElement {
                 variant: 'primary',
                 action: true,
             },
-            {
-                label: 'Отмена',
-                variant: 'secondary',
-                action: false
-            }]
+                {
+                    label: 'Отмена',
+                    variant: 'secondary',
+                    action: false
+                }]
         }, options);
 
         return this.showDialog(options.header, content, options.buttons)

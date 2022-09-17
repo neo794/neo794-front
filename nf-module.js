@@ -3,7 +3,7 @@ import mime from 'mime';
 import fs from "fs/promises";
 import url from "url";
 
-// import { auth } from "@nfjs/auth";
+import { auth } from "@nfjs/auth";
 import { web, ComponentCache, endpointData } from "@nfjs/back";
 import { registerLibDir, prepareResponse, getCacheKey, registerCustomElementsDir, customElements } from "@nfjs/front-server";
 import { api, extension, config } from "@nfjs/core";
@@ -114,7 +114,7 @@ async function init() {
     registerLibDir('dayjs');
     registerLibDir('ace-builds', 'node_modules/ace-builds/src-noconflict');
     registerLibDir('deep-object-assign-with-reduce');
-    registerLibDir('@f/front');
+    registerLibDir('@pf/front');
     registerLibDir('@plcmp');
     registerLibDir('@nfjs/core/api/common.js', 'node_modules/@nfjs/core/api/common.js', { singleFile: true });
     registerCustomElementsDir('@plcmp', null, { recursive: true });
