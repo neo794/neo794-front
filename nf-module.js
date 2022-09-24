@@ -69,7 +69,7 @@ async function customElementsHandler(context) {
 }
 
 async function checkSession(context) {
-    if (context.session.get('context.user')) {
+    if (context.session.get('auth.key')) {
         context.send({ data: true });
     } else {
         context.code(401);
@@ -78,12 +78,10 @@ async function checkSession(context) {
 }
 
 async function login(context) {
-    let { login, password } = context.body.args;
     let data = {};
-    let r = await auth.login(login, password, context.session);
-
+    let r = await auth.login(context);
     if (!r.result) {
-        const err = api.nfError(new Error(r.detail.map(x => x.result.detail).join(';')));
+        const err = api.nfError(r.detail, r.detail.message);
         context.send(err.json());
         context.end();
     } else {

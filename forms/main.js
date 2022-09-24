@@ -122,7 +122,6 @@ export default class MainView extends PlForm {
     onMenuItemSelected(event) {
         if (event.detail.form) {
             this.$.formManager.open(event.detail.form, { newThread: event.detail.newThread, extKey: event.detail.form });
-            this.$.menu.close();
         }
     }
 

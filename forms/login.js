@@ -80,10 +80,10 @@ export default class Login extends PlForm {
     }
 
     onLoginClick() {
-        if (this.login && this.password) {
+        // if (this.login && this.password) {
             this.$.aLogin.execute({ login: this.login, password: this.password });
             this.login = null;
             this.password = null;
-        }
+        // }
     }
 }
