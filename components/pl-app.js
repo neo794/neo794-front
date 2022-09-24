@@ -26,7 +26,7 @@ class App extends PlElement {
 		super.connectedCallback();
 		customLoader('pl-action').then(() => {
 			this.aSessionCheck = this.$.aSessionCheck;
-			this.aSessionCheck.execute()
+			this.aSessionCheck.execute();
 		})
 
 		window.NF = {};

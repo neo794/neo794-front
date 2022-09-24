@@ -140,7 +140,7 @@ async function init() {
     }
     web.on(
         'POST',
-        '/@nfjs/front-pl/fse/:form/:type/:id',
+        '/@pf/front-pl/fse/:form/:type/:id',
         { middleware: ['session', context => loadFormServerEndpoint(context, context?.params?.type), 'auth', 'json'] },
         context => endpointData(context, endpointHandlers[context?.params?.type ?? 'dataset'])
     );
