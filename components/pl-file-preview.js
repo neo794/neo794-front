@@ -12,7 +12,12 @@ class PlFilePreview extends PlElement {
             value: false
         },
         endpoint: {
-            type: String
+            type: String,
+            value: '/@nfjs/download'
+        },
+        wrap: {
+            type: Boolean,
+            reflectToAttribute: true
         }
     }
 
@@ -22,6 +27,11 @@ class PlFilePreview extends PlElement {
             gap: 8px;
             display: block;
             overflow: auto;
+        }
+        
+        :host([wrap]) {
+            display: flex;
+            flex-wrap: wrap;
         }
 
         .cont {
@@ -34,6 +44,7 @@ class PlFilePreview extends PlElement {
             border-radius: var(--border-radius);
             position: relative;
             overflow: hidden;
+            margin-bottom: 8px;
         }
 
         .file-info-container {

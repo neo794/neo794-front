@@ -140,7 +140,7 @@ class PlToast extends PlElement {
 			<div class="full" hidden$="[[isShowFullHidden(text)]]" on-click="[[onFullClick]]">Показать полностью...</div>
 			<div class="button">
 				<pl-button d:repeat="[[buttons]]" negative="[[item.negative]]" variant="[[item.variant]]" label="[[item.label]]"
-						   on-click="[[onClick]]"></pl-button>
+					on-click="[[onClick]]"></pl-button>
 			</div>
 		</div>
 	`;

@@ -10,16 +10,16 @@ class PlCodeEditor extends PlElement {
     }
 
     static css = css`
-        :host {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-        #editor{
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-        }
+      :host {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      #editor{
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+      }
     `;
 
     static template = html`

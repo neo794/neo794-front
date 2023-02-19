@@ -13,51 +13,51 @@ class PlDropdownMenuItem extends PlElement {
     };
 
     static css = css`
-        :host{
-            box-sizing: border-box;
-            padding: 0 var(--space-sm);
-            min-height: var(--base-size-md);
-            width: 100%;
-            font: var(--text-font);
-            color: var(--text-color);
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
+      :host{
+        box-sizing: border-box;
+        padding: 0 var(--space-sm);
+        min-height: var(--base-size-md);
+        width: 100%;
+        font: var(--text-font);
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
 
-        .content {
-            width: 100%;
-        }
-        .prefix {
-            display: flex;
-        }
+      .content {
+        width: 100%;
+      }
+      .prefix {
+        display: flex;
+      }
 
-        .prefix ::slotted(*) {
-            margin-right: var(--space-sm);
-            width: 16px;
-            height: 16px;
-        }
+      .prefix ::slotted(*) {
+        margin-right: var(--space-sm);
+        width: 16px;
+        height: 16px;
+      }
 
-        .suffix {
-            display: flex;
-        }
+      .suffix {
+        display: flex;
+      }
 
-        .suffix ::slotted(*) {
-            margin-left: var(--space-sm);
-            width: 16px;
-            height: 16px;
-        }
+      .suffix ::slotted(*) {
+        margin-left: var(--space-sm);
+        width: 16px;
+        height: 16px;
+      }
 
-        :host(:hover){
-            background-color: var(--grey-lightest)
-        }
-        :host([disabled]){
-            color: var(--grey-base);
-            pointer-events: none;
-        }
-        :host([hidden]){
-            display: none;
-        }
+      :host(:hover){
+        background-color: var(--grey-lightest)
+      }
+      :host([disabled]){
+        color: var(--grey-base);
+        pointer-events: none;
+      }
+      :host([hidden]){
+        display: none;
+      }
     `;
 
     static template = html`

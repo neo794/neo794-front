@@ -9,7 +9,7 @@ class PlMenuForm extends PlElement {
         selected: { type: String, value: undefined, observer: '_selectedChange' },
         scrollable: { type: Boolean, reflectToAttribute: true, value: false }
     }
-
+    
     static css = css`
         :host {
             display: flex;
@@ -106,7 +106,7 @@ class PlMenuForm extends PlElement {
             <div id="menu">
                 <template d:repeat="[[items]]">
                     <div class="menu-item" hidden$="[[item.menuHidden]]" selected$="[[item.selected]]" name$="[[item.name]]"
-                         on-click="[[onMenuClick]]">
+                        on-click="[[onMenuClick]]">
                         [[item.title]]
                         <div class="mark" hidden$="[[!item.invalid]]"></div>
                     </div>

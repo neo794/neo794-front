@@ -12,15 +12,15 @@ class FormManager extends PlElement {
         dashboard: { type: String, observer: 'dashBoardChange' }
     }
     static css = css`
-        :host {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-            height: 100%;
-            width: 100%;
-            box-sizing: border-box;
-        }
+      :host {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
+      }
     `;
     static template = html`
         <slot></slot>
@@ -35,7 +35,7 @@ class FormManager extends PlElement {
         this.container.addEventListener('pl-form-thread-empty', (e)=>this.onThreadEmpty(e));
     }
 
-    open(name, options = {} ) {
+    async open(name, options = {} ) {
         let {threadId, newThread, extKey, dashboard} = options;
         if (name === this.dashboard) {
             dashboard = true;
@@ -47,10 +47,17 @@ class FormManager extends PlElement {
         if (!newThread) {
             // search and show existing thread, new window will not open
             thread = this.threads.find( i => i.name === name);
-            if (thread) showOnly = true;
+            if (thread) {
+                showOnly = true;
+                //if form already opened update props
+                if (options?.params && options.params instanceof Object)
+                    Object.entries(options.params).forEach( ([k,v]) => {
+                        thread.currentForm[k] = v;
+                    });
+            }
         }
         if (this.singleThread && !this.currentThread?.dashboard && this.currentThread !== thread) {
-            if (this.currentThread?.node.closeAll() === false) return;
+            if (await this.currentThread?.node.closeAll() === false) return;
         }
         if (!thread || newThread) {
             //Create new thread
@@ -66,6 +73,7 @@ class FormManager extends PlElement {
             this.switchTo(this.currentThread.id);
         else
             this.switchTo(thread.id);
+
         return result;
     }
     threadFormChange(v,o,m) {

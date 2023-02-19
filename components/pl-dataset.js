@@ -35,9 +35,9 @@ class PlDataset extends PlElement {
     }
 
     static css = css`
-        :host {
-            display: none;
-        }
+      :host {
+        display: none;
+      }
     `;
 
     connectedCallback() {
@@ -94,8 +94,12 @@ class PlDataset extends PlElement {
             try {
                 await this.pending;
                 let _args = this._args;
-                const {merge, placeHolder, executedOnArgsChange = false} = this.opts ?? {};
+                let partial = this.partialData;
 
+                const {merge, placeHolder, executedOnArgsChange = false, returnOnly, partialData} = this.opts ?? {};
+                if(partialData != null) {
+                    partial = partialData;
+                }
                 const reqArgs = this.requiredArgs ? this.requiredArgs.split(';') : [];
                 if (reqArgs.length > 0 && (!_args || reqArgs.find(r => _args[r] === undefined || _args[r] === null))) {
                     if (executedOnArgsChange) {
@@ -107,7 +111,7 @@ class PlDataset extends PlElement {
                 }
 
                 let chunk_start, chunk_end;
-                if (this.partialData) {
+                if (partial) {
                     if (!merge) {
                         this.data.control.range.chunk_start = 0;
                         this.data.control.range.chunk_end = 99;
@@ -118,7 +122,14 @@ class PlDataset extends PlElement {
                         this.data.control.treeMode.hidValue = null;
                     }
                 }
-                const req = await requestData(this.endpoint, {
+
+                let url = this.endpoint;
+                if (!url) {
+                    // значение по умолчанию это fse(formServerEndpoint)
+                    const formName = this.parentNode.host.localName.replace('pl-form-','');
+                    url = `/@nfjs/front-pl/fse/${formName}/dataset/${this.id}`;
+                }
+                const req = await requestData(url, {
                     headers: {'Content-Type': 'application/json'},
                     method: 'POST',
                     body: JSON.stringify(this.prepareEndpointParams(_args, {range: {chunk_start, chunk_end}})),
@@ -151,6 +162,11 @@ class PlDataset extends PlElement {
                     if (data[data.length - 1]._rn > chunk_end) {
                         data[data.length - 1] = new PlaceHolder({rn: data[data.length - 1]._rn ?? chunk_end});
                     }
+                }
+
+                if(returnOnly) {
+                    resolve({data: data, metaData: metaData});
+                    return {data: data, metaData: metaData};
                 }
 
                 if (this.data instanceof ControlledArray) {

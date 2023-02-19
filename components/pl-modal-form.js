@@ -2,9 +2,8 @@ import { PlElement, html, css } from "polylib";
 import { addOverlay, removeOverlay } from "@plcmp/utils";
 import '@plcmp/pl-icon-button';
 
-class PlModalForm extends PlElement {
+export class PlModalForm extends PlElement {
     static properties = {
-        opened: { type: Boolean, reflectToAttribute: true },
         position: { type: String, value: 'right', reflectToAttribute: true },
         size: { type: String, value: 'large', reflectToAttribute: true },
         formTitle: { type: String, value: '' },
@@ -13,7 +12,7 @@ class PlModalForm extends PlElement {
 
     static css = css`
         :host {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(36, 51, 49, 0.4);
             height: 100%;
             position: fixed;
             top: 0;
@@ -23,22 +22,29 @@ class PlModalForm extends PlElement {
             width: 100%;
             z-index: 10000;
         }
-        :host .modal{
-            height: 100%;
-            position: absolute;
-            background: var(--background-color);
-            will-change: contents;
-            opacity: 0;
-            transform: translateX(30%);
-            box-sizing: border-box;
-            visibility: hidden;
+
+        :host(.out) > #modal {
+			animation: flyOut 0.3s ease-out;
+		}
+
+        :host #modal{
             display: flex;
-            inset-block-start: 0px;
-            inset-inline-end: 0;
             flex-direction: column;
-            will-change: transform, opacity;
-            transition: all ease 200ms;
-            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            height: 100%;
+            box-sizing: border-box;
+            position: absolute;
+            inset-block-start: 0;
+            inset-inline-end: 0;
+            background: var(--background-color);
+            will-change: transform, opacity, visibility;
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        :host(.in) > #modal {
+            animation: flyIn 0.3s ease-out;
+            visibility: visible;
+            opacity: 1;
         }
 
         .content-header {
@@ -57,22 +63,16 @@ class PlModalForm extends PlElement {
             color: var(--text-color);
         }
 
-        :host([size=small]) .modal{
+        :host([size=small]) #modal{
             width: 320px;
         }
 
-        :host([size=medium]) .modal{
+        :host([size=medium]) #modal{
             width: 560px;
         }
 
-        :host([size=large]) .modal{
+        :host([size=large]) #modal{
             width: 920px;
-        }
-
-        :host([opened]) .modal{
-            opacity: 1;
-            transform: translateX(0);
-            visibility: visible;
         }
 
         :host ::slotted(*) {
@@ -82,11 +82,38 @@ class PlModalForm extends PlElement {
             flex-direction: column;
             overflow: auto;
             box-sizing: border-box;
+            position: relative;
         }
+
+        @keyframes flyIn {
+			from {
+                transform: translateX(30%);
+                opacity: 0;
+                visibility: hidden;
+            }
+			to {
+                transform: translateX(0);
+                opacity: 1;
+                visibility: visible;
+			}
+		}
+
+		@keyframes flyOut {
+			from {
+                transform: translateX(0);
+                opacity: 1;
+                visibility: visible;
+			}
+			to {
+                transform: translateX(30%);
+                opacity: 0;
+                visibility: hidden;
+			}
+		}
     `;
 
     static template = html`
-        <div class="modal">
+        <div id="modal">
             <div id="header" class="content-header">
                 <span id="form-label">[[formTitle]]</span>
                 <pl-icon-button on-click="[[close]]" variant="link" iconset="pl-default" size="16" icon="close">
@@ -114,25 +141,34 @@ class PlModalForm extends PlElement {
         super.connectedCallback();
         this.addEventListener('close-form', (event) => {
             event.stopPropagation();
-            this.opened = false;
+            this.classList.remove('in');
+            this.classList.add('out');
+
             setTimeout(() => {
-                removeEventListener('click', this._close);
                 removeOverlay(this);
                 this.parentNode.removeChild(this);
             }, 200);
         });
 
-        addEventListener('click', this._close );
-        // stop all click events to prevent actions under modal window
-        this.addEventListener('click',  e => {
+        this.$.modal.addEventListener('mousedown', e => {
+            // prevent window click event when mousedown was in dropdown area and click outside
+            addEventListener('click', e => { if (!e.composedPath().includes(this.$.modal)) e.stopImmediatePropagation() }, { once: true, capture: true });
+        });
+
+        this.addEventListener('click', e => {
             this._close(e);
         });
     }
 
     open() {
-        this.opened = true;
-        addOverlay(this);
         this.formTitle = this.firstChild.formTitle;
+        setTimeout(() => {
+            addOverlay(this);
+            this.classList.add('in');
+            this.firstChild.addEventListener('formTitle-changed', () => {
+                this.formTitle = this.firstChild.formTitle;
+            });
+        }, 200)
     }
 
     async close(result) {

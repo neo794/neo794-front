@@ -27,11 +27,11 @@ class PlFileUpload extends PlElement {
         },
         endpoint: {
             type: String,
-            value: 'upload'
+            value: '/@nfjs/upload'
         },
         downloadEndpoint: {
             type: String,
-            value: 'download'
+            value: '/@nfjs/download'
         },
         hint: {
             type: String,
@@ -97,7 +97,7 @@ class PlFileUpload extends PlElement {
             border-right: calc(var(--space-md) / 2) solid transparent;
         }
         .files {
-        overflow: auto;
+            overflow: auto;
         }
     `;
 
@@ -105,7 +105,7 @@ class PlFileUpload extends PlElement {
         <div id="uploader" class="uploader-container">
             <input id="fileInput" accept$="[[accept]]" type="file" multiple$="[[multiple]]" on-change="[[onFileInputChange]]" hidden/>
             <pl-icon iconset="pl-default" size="32" icon="upload"></pl-icon>
-
+        
             <span class="hint">[[hint]]</span>
         </div>
         <div class="files">
@@ -239,11 +239,12 @@ class PlFileUpload extends PlElement {
             if (event.target.status === 200) {
                 const resp = JSON.parse(event.target.response);
                 if (resp.id) {
-                    this.set(`files.${idx}.value`, resp.id);
+                    this.set(`files.${idx}.value`, resp.filename);
+                    this.set(`files.${idx}.id`, resp.id);
                 } else {
                     if(resp.error) {
                         this.splice('files', idx, 1);
-                        document.dispatchEvent(new CustomEvent('error', { detail: { message: resp.error } }));
+                        document.dispatchEvent(new CustomEvent('toast', { detail: { message: resp.error, options: { type: 'error', header: 'Ошибка', timeout: 0, icon: 'close-circle' } } }));
                     }
                 }
             }

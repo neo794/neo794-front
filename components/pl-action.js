@@ -40,9 +40,9 @@ class PlAction extends PlElement {
     }
 
     static css = css`
-        :host {
-            display: none;
-        }
+      :host {
+        display: none;
+      }
     `;
 
     _argsChanged(val) {
@@ -123,6 +123,11 @@ class PlAction extends PlElement {
             }
 
             let url = this.endpoint;
+            if (!url) {
+                // значение по умолчанию это fse(formServerEndpoint)
+                const formName = this.parentNode.host.localName.replace('pl-form-','');
+                url = `/@nfjs/front-pl/fse/${formName}/action/${this.id}`;
+            }
             const params = {
                 headers: { 'Content-Type': 'application/json' },
                 method: this.method || 'POST',
