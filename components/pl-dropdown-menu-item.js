@@ -113,7 +113,7 @@ class PlDropdownMenuItem extends PlElement {
         if (submenu && !submenu.$.dd.opened) {
             submenu.$.dd.direction = 'right';
             submenu.open(this);
-           
+
             return true;
         }
         return false;

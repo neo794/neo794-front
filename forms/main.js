@@ -90,9 +90,6 @@ export default class MainView extends PlForm {
         </pf-menu>
         <div class="content">
             <pl-forms-manager id="formManager" current-form="{{currentForm}}" current-thread="{{currentThread}}" single-thread="[[singleThread]]" dashboard="[[dashboard]]">
-                <pl-header hidden="[[isHeaderHidden(currentForm)]]" current-form="[[currentForm]]" breadcrumbs="[[breadcrumbs]]" on-breadcrumb-click="[[onBreadCrumbsClick]]">
-                    [[currentForm.headerTemplate]]
-                </pl-header>
             </pl-forms-manager>
             <pl-router id="router" disable-history current-form="{{currentForm}}" current-thread="[[currentThread]]"
                 form-manager="[[$.formManager]]"></pl-router>
@@ -100,12 +97,17 @@ export default class MainView extends PlForm {
         <pl-dataset id="dsMenu" data="{{menuItems}}" endpoint="/front/action/getMenu"></pl-dataset>
         <pl-action id="aLogout" endpoint="/front/action/logout"></pl-action>
         <pl-action id="aGetUserProfile" data="{{userProfile}}" endpoint="/front/action/getUserProfile"></pl-action>
+        <pl-action id="aGetVersion" endpoint="api/getVersion"></pl-action>
     `;
 
     onConnect() {
+        this.$.aGetVersion.execute().then((res)=>{
+            document.title = `proFootball v${res.version}`;
+        });
         this.singleThread = NF?.config?.front?.formManager?.singleThread === true;
         this.dashboard = NF?.config?.front?.formManager?.dashboard;
         this.menuManualHide = NF?.config?.front?.mainMenu?.manualHide === true;
+        NF.MainContainer = this.$.formManager;
         this.$.dsMenu.execute();
         this.$.aGetUserProfile.execute().then(res => NF.user = {...res});
         addEventListener('form-change', e => this.onFormChange());

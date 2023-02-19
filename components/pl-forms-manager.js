@@ -64,7 +64,7 @@ class FormManager extends PlElement {
         if (options?.dashboard && this.currentThread)
             // When dashboard auto-open on already opened form, hide any thread except current
             this.switchTo(this.currentThread.id);
-         else
+        else
             this.switchTo(thread.id);
         return result;
     }
@@ -74,7 +74,7 @@ class FormManager extends PlElement {
             if (path.at(-1) === 'currentForm') {
                 let thread = this.get(path.slice(0, -1));
                 if (thread.node.hidden === false){
-                     this.currentForm = thread.node.currentForm;
+                    this.currentForm = thread.node.currentForm;
                 }
             }
         }

@@ -3,10 +3,8 @@ import { PlElement, html, css } from "polylib";
 class PlCard extends PlElement {
     static properties = {
         header: { type: String },
-        fit: {
-            type: Boolean,
-            reflectToAttribute: true
-        },
+        fit: { type: Boolean, reflectToAttribute: true },
+        stretch: { type: Boolean, reflectToAttribute: true },
         hidden: { type: Boolean, reflectToAttribute: true },
         border: { type: Boolean, reflectToAttribute: true }
     }
@@ -19,6 +17,7 @@ class PlCard extends PlElement {
             height: fit-content;
             box-sizing: border-box;
             gap: 8px;
+            min-width: 0;
             max-width: 100%;
         }
 
@@ -30,6 +29,10 @@ class PlCard extends PlElement {
 
         :host([hidden]) {
             display: none;
+        }
+
+        :host([stretch]) {
+            width: 100%;
         }
 
         :host([fit]) {
@@ -56,7 +59,6 @@ class PlCard extends PlElement {
             box-sizing: border-box;
             justify-content: space-between;
             gap: 8px;
-            overflow:hidden;
             min-height: 32px;
         }
 
@@ -65,11 +67,6 @@ class PlCard extends PlElement {
             color: var(--black-base);
             text-align: start;
             flex: 1 1 0%;
-        }
-
-        .content {
-            height: 100%;
-            width: 100%;
         }
 
         .tools ::slotted(*) {
@@ -88,9 +85,7 @@ class PlCard extends PlElement {
                 <slot name="tools"></slot>
             </span>
         </div>
-        <div class="content">
-            <slot></slot>
-        </div>
+        <slot></slot>
         <slot name="footer"></slot>
     `;
 }

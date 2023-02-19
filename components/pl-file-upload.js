@@ -105,7 +105,7 @@ class PlFileUpload extends PlElement {
         <div id="uploader" class="uploader-container">
             <input id="fileInput" accept$="[[accept]]" type="file" multiple$="[[multiple]]" on-change="[[onFileInputChange]]" hidden/>
             <pl-icon iconset="pl-default" size="32" icon="upload"></pl-icon>
-        
+
             <span class="hint">[[hint]]</span>
         </div>
         <div class="files">
@@ -196,8 +196,8 @@ class PlFileUpload extends PlElement {
             const file = uploadedFiles[i];
             if (file.size > this.maxFileSize) {
                 document.dispatchEvent(new CustomEvent('error', { detail: {
-                    message: `Размер файла "${file.name}" превышает максимальный размер.`
-                } }));
+                        message: `Размер файла "${file.name}" превышает максимальный размер.`
+                    } }));
                 console.log(i,file)
                 continue;
             }

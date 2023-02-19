@@ -110,6 +110,8 @@ async function init() {
     registerLibDir('polylib');
     registerLibDir('imask');
     registerLibDir('dayjs');
+    registerLibDir('chart.js');
+    registerLibDir('node-cron');
     registerLibDir('ace-builds', 'node_modules/ace-builds/src-noconflict');
     registerLibDir('deep-object-assign-with-reduce');
     registerLibDir('@pf/front');
@@ -150,6 +152,16 @@ async function init() {
             data: {
                 root: root,
                 modules: exts
+            }
+        });
+        context.end();
+    });
+
+    web.on('POST','/api/getVersion', async(context) => {
+        const packageJson = JSON.parse(await fs.readFile(path.join(process.cwd(), 'package.json').replace(/\\/g, '/'), 'utf-8'));
+        context.send({
+            data: {
+                version: packageJson.sub_version
             }
         });
         context.end();

@@ -16,7 +16,7 @@ class PlRouter extends PlElement {
         if (hash) {
             this.processUrl(hash);
         } else {
-            history.replaceState({}, null, '#');
+            history.replaceState(null, null, location.pathname + location.search);
         }
 
         onhashchange = (e) => {
@@ -45,7 +45,7 @@ class PlRouter extends PlElement {
 
             this.setUrlParams(thread);
         } else {
-            this.history({}, null, '#');
+            history.replaceState(null, null, location.pathname + location.search);
         }
     }
 

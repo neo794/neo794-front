@@ -3,6 +3,9 @@ import '@plcmp/pl-iconset-default';
 import { customLoader } from "../lib/CustomElementsLoader.js";
 import { requestData } from "../lib/RequestServer.js";
 import { openForm } from "../lib/FormUtils.js";
+import './pl-action.js';
+import './pl-toast-manager.js';
+
 window.customLoader = customLoader;
 
 class App extends PlElement {
@@ -15,96 +18,86 @@ class App extends PlElement {
 			display: block;
 			width: 100%;
 			height: 100%;
-		}`;
+		}
+
+		#root {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+
+		#root > *:not(:last-child){
+			display: none;
+		}
+	`;
 
 	static template = html`
+		<div id="root"></div>
 		<pl-action id="aSessionCheck" data="{{auth}}" endpoint="/front/action/checkSession"></pl-action>
-		<pl-toast id="toast"></pl-toast>
+		<pl-toast-manager id="toastManager"></pl-toast-manager>
 	`;
 
 	async connectedCallback() {
 		super.connectedCallback();
-		customLoader('pl-action').then(() => {
-			this.aSessionCheck = this.$.aSessionCheck;
-			this.aSessionCheck.execute();
-		})
 
-		window.NF = {};
-
-		this.config = await requestData('/pl-get-config', { unauthorized: true }).then(r => r.json()).catch(() => { });
-		NF.config = this.config;
-
-		let { includeTimeZone } = this.config || {};
-		Date.prototype.toJSON = function () {
-			var tzo = -this.getTimezoneOffset(),
-				dif = tzo >= 0 ? '+' : '-',
-				pad = function (num) {
-					var norm = Math.floor(Math.abs(num));
-					return (norm < 10 ? '0' : '') + norm;
-				},
-				pad3 = function (num) {
-					var norm = Math.floor(Math.abs(num));
-					return (norm < 10 ? '00' : (norm < 100 ? '0' : '')) + norm;
-				};
-			return this.getFullYear() +
-				'-' + pad(this.getMonth() + 1) +
-				'-' + pad(this.getDate()) +
-				'T' + pad(this.getHours()) +
-				':' + pad(this.getMinutes()) +
-				':' + pad(this.getSeconds()) +
-				'.' + pad3(this.getMilliseconds()) +
-				(includeTimeZone ? (dif + pad(tzo / 60) + ':' + pad(tzo % 60)) : '');
-		}
-
-
-		customLoader('pl-toast');
-
-		this.resizers = [];
-
-		window.addEventListener('authorized', () => {
+		addEventListener('authorized', () => {
 			this.auth = true;
 		});
 
-		window.addEventListener('unauthorized', () => {
+		addEventListener('unauthorized', () => {
 			this.auth = false;
 		});
 
-		this.addEventListener('resize-notify-required', (ev) => {
-			ev.stopPropagation();
-			this.resizers.push(ev.detail)
-		});
+		window.NF = {};
 
-		const resizeObserver = new ResizeObserver(() => {
-			window.requestAnimationFrame(() => {
-				this.resizers.forEach(el => el.cb());
+		requestData('/pl-get-config', {
+			unauthorized: true
+		})
+			.then(r => r.json())
+			.then(config => {
+				NF.config = config;
+				let { includeTimeZone } = config || {};
+				Date.prototype.toJSON = function () {
+					var tzo = -this.getTimezoneOffset(),
+						dif = tzo >= 0 ? '+' : '-',
+						pad = function (num) {
+							var norm = Math.floor(Math.abs(num));
+							return (norm < 10 ? '0' : '') + norm;
+						},
+						pad3 = function (num) {
+							var norm = Math.floor(Math.abs(num));
+							return (norm < 10 ? '00' : (norm < 100 ? '0' : '')) + norm;
+						};
+					return this.getFullYear() +
+						'-' + pad(this.getMonth() + 1) +
+						'-' + pad(this.getDate()) +
+						'T' + pad(this.getHours()) +
+						':' + pad(this.getMinutes()) +
+						':' + pad(this.getSeconds()) +
+						'.' + pad3(this.getMilliseconds()) +
+						(includeTimeZone ? (dif + pad(tzo / 60) + ':' + pad(tzo % 60)) : '');
+				}
+
+				this.$.toastManager.position = NF?.config?.front?.toastPosition || 'top-right';
+				this.$.aSessionCheck.execute();
+				document.querySelector('#preloader').style.display = "none";
 			});
-		});
-
-		resizeObserver.observe(document.body);
-		document.querySelector('#preloader').style.display = "none";
-		document.addEventListener('error', this.showError.bind(this));
-		document.addEventListener('success', this.showSuccess.bind(this));
-
+		document.addEventListener('toast', this.showToast.bind(this));
 	}
 
-
-	showError(e) {
-		this.$.toast.show(e.detail.message)
-	}
-
-	showSuccess(e) {
-		this.$.toast.show(e.detail.message)
+	showToast(e) {
+		this.$.toastManager.pushToast(e.detail.message, e.detail.options)
 	}
 
 	async _authObserver(auth) {
 		if (auth) {
-			await openForm('main', this.root);
+			await openForm('main', this.$.root);
 			if (this.loginForm) {
 				await this.loginForm.close();
 				this.loginForm = null;
 			}
 		} else {
-			this.loginForm = await openForm('login', this.root);
+			this.loginForm = await openForm('login', this.$.root);
 		}
 	}
 

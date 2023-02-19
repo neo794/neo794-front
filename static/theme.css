@@ -10,6 +10,10 @@
     --label-width: 260px;
     --content-width: 240px;
 
+    --pf-label-font: var(--text-font);
+    --pf-label-line-height: var(--space-lg);
+    --pf-label-color: var(--text-color);
+
     --menu-background-color: var(--pf-color-5);
     --menu-text-color: #F6F8FA;
 
@@ -25,6 +29,12 @@
     --pf-white: #ffffff;
     --pf-black: #000000;
     --pf-mediumseagreen: mediumseagreen;
+
+    --pf-base-size-xs: 16px;
+    --pf-base-size-ms: 20px;
+    --pf-base-size-s: 24px;
+    --pf-base-size-m: 32px;
+    --pf-base-size-l: 40px;
 
     --pf-color-1: #FFFFFF;
     --pf-color-2: #F4F6F9;
@@ -43,9 +53,14 @@
     --pf-color-15: #24292f;
     --pf-color-16: #33393f;
     --pf-color-17: #4f575e;
+    --pf-color-18: #81d150;
+    --pf-color-19: #f4e53a;
+    --pf-color-20: #ff8c8c;
+    --pf-color-21: #aacbff;
+    --pf-color-22: #dbeaff;
 }
 
-  body {
+  body * {
     background-color: #F6F8FA;
     overflow: hidden;
   }
