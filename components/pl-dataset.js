@@ -26,11 +26,17 @@ class PlDataset extends PlElement {
             type: String
         },
         data: {
+            type: Array,
+            value: () => { return []; },
             observer: '_dataObserver'
         },
         unauthorized: {
             type: Boolean,
             value: false
+        },
+        originalData: {
+            type: Array,
+            value: () => { return []; }
         }
     }
 
@@ -67,7 +73,22 @@ class PlDataset extends PlElement {
     }
     _dataObserver(val, oldVal, mut) {
         if (mut.path === 'data.sorts') {
-            this.execute(this.args);
+            const { field, sort } = this.data.sorts[0];
+            let d = this.data.slice();
+            if (sort === '') {
+                setTimeout(() => {
+                    this.set('data',this.originalData);
+                },0);
+            } else {
+                d.sort((a,b) => {
+                    if (a[field].toLowerCase() > b[field].toLowerCase()) {
+                        return (sort === 'asc') ? 1 : -1;
+                    } else {
+                        return (sort === 'asc') ? -1 : 1;
+                    }
+                });
+            }
+            this.set('data',d);
         }
     }
     prepareEndpointParams(args, control) {
@@ -199,6 +220,11 @@ class PlDataset extends PlElement {
                 this.pending = null;
                 this.executing = false;
                 this.result = null;
+            }
+        });
+        this.result.then((res) => {
+            if (res && res.length) {
+                this.set('originalData',res.slice());
             }
         });
         return this.result;

@@ -116,8 +116,10 @@ async function init() {
     registerLibDir('deep-object-assign-with-reduce');
     registerLibDir('@pf/front');
     registerLibDir('@plcmp');
+    registerLibDir('@pfcmp');
     registerLibDir('@nfjs/core/api/common.js', 'node_modules/@nfjs/core/api/common.js', { singleFile: true });
     registerCustomElementsDir('@plcmp', null, { recursive: true });
+    registerCustomElementsDir('@pfcmp', null, { recursive: true });
     registerCustomElementsDir('@pf/front/components')
 
 
