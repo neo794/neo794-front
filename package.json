@@ -8,6 +8,9 @@
 	"repository": {
 		"url": "https://github.com/neo794/pf-front.git"
 	},
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
+	},
 	"author": {
 		"name": "Artem Morozov",
 		"email": "neo794@yandex.ru"
