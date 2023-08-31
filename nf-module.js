@@ -114,13 +114,11 @@ async function init() {
     registerLibDir('node-cron');
     registerLibDir('ace-builds', 'node_modules/ace-builds/src-noconflict');
     registerLibDir('deep-object-assign-with-reduce');
-    registerLibDir('@pf/front');
+    registerLibDir('@neo794/front');
     registerLibDir('@plcmp');
-    registerLibDir('@pfcmp');
     registerLibDir('@nfjs/core/api/common.js', 'node_modules/@nfjs/core/api/common.js', { singleFile: true });
     registerCustomElementsDir('@plcmp', null, { recursive: true });
-    registerCustomElementsDir('@pfcmp', null, { recursive: true });
-    registerCustomElementsDir('@pf/front/components')
+    registerCustomElementsDir('@neo794/front/components');
 
 
     web.on('GET', '/forms/:form', formsHandler);
@@ -142,7 +140,7 @@ async function init() {
     }
     web.on(
         'POST',
-        '/@pf/front-pl/fse/:form/:type/:id',
+        '/@neo794/front-pl/fse/:form/:type/:id',
         { middleware: ['session', context => loadFormServerEndpoint(context, context?.params?.type), 'auth', 'json'] },
         context => endpointData(context, endpointHandlers[context?.params?.type ?? 'dataset'])
     );
