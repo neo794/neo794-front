@@ -25,7 +25,7 @@
 		"imask": "^6.1.0",
 		"mime": "^3.0.0",
 		"ace-builds": "^1.4.13",
-		"@pfcmp/pf-grid": "^0.0.1",
+		"@neo794/pf-grid": "^0.0.1",
 		"@plcmp/utils": "^0.1.1",
 		"@plcmp/pl-badge": "^0.1.0",
 		"@plcmp/pl-button": "^0.1.0",
