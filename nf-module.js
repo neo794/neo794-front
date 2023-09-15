@@ -3,7 +3,7 @@ import mime from 'mime';
 import fs from "fs/promises";
 import url from "url";
 
-import { auth } from "@nfjs/auth";
+import { auth } from "@neo794/auth";
 import { web, ComponentCache, endpointData } from "@nfjs/back";
 import { registerLibDir, prepareResponse, getCacheKey, registerCustomElementsDir, customElements } from "@nfjs/front-server";
 import { api, extension, config } from "@nfjs/core";
